@@ -23,24 +23,17 @@ gh run list --workflow pages --limit 1
 curl -s -o /dev/null -w '%{http_code}\n' https://<owner>.github.io/i-have-adhd-demo/
 ```
 
-## Before pushing: commit identity
+## Commit identity (decided)
 
-The initial commit was authored with the local `git config` email. Check it:
+The author reviewed this on 2026-11-08 and chose to publish under the local git identity already on the commits.
+**Do not rewrite history, amend the author, or change the email.** A public repo will show that address permanently;
+that is an accepted, deliberate choice.
 
-```sh
-git log -1 --format='%an <%ae>'
-```
-
-If it contains a personal address, rewrite it first — a public repo publishes every commit's
-author email permanently, and rewriting after the push does not remove it from forks or caches.
+If you need to confirm what will be published:
 
 ```sh
-# preferred: the GitHub account's noreply address (Settings → Emails → Keep my email private)
-git commit --amend --reset-author --no-edit \
-  --author="Name <ID+username@users.noreply.github.com>"
+git log --format='%h %an <%ae> %s'
 ```
-
-Do not enable "Keep my email addresses private" retroactively and assume it fixes history; it does not.
 
 ## After publishing
 

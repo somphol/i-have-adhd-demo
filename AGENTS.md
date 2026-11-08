@@ -56,6 +56,8 @@ then uploads that. It must never upload the repository root — `.git` would go 
 - **No dependencies, ever.** The page must open from a bare checkout on a machine with no toolchain.
 - **Publish only the site.** The Pages job copies files into `_site/` on purpose. Changing it to `path: .` would
   publish the repository and its history.
+- **Commit identity is settled.** The author chose to keep the local git identity on the commits. Do not rewrite
+  history or change the author before pushing; `PUBLISHING.md` records the decision.
 
 ## Known issues
 
