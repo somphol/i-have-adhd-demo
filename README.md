@@ -4,6 +4,8 @@ A side-by-side demo of [i-have-adhd](https://github.com/ayghri/i-have-adhd), an 
 agent from burying the answer. Nine ordinary requests — a failing test, a vague "it's slow", a destructive cleanup —
 answered once by a generic assistant and once under the skill's 10 rules.
 
+**Live demo: <https://somphol.github.io/i-have-adhd-demo/>**
+
 Open `index.html` to see the comparison. No build step, no dependencies, no network.
 
 ![The demo page, showing the header stats and the first before/after pair](docs/preview.png)
@@ -30,7 +32,7 @@ because a fair "before" answer does not always use every tic; two of them end wi
 ## Run it
 
 ```sh
-git clone <this-repo> i-have-adhd-demo
+git clone https://github.com/somphol/i-have-adhd-demo
 cd i-have-adhd-demo
 open index.html          # macOS; or: npm run serve → http://localhost:4173
 ```

@@ -1,5 +1,9 @@
 # Notes for the publishing session
 
+**Status: published 2026-11-08** — <https://github.com/somphol/i-have-adhd-demo>, live at
+<https://somphol.github.io/i-have-adhd-demo/>. Pages source is GitHub Actions. The steps below are kept for a
+re-publish, a fork, or a rename.
+
 This repo is publish-ready. Nothing needs to be built: `index.html` works as-is, and
 `data/examples.js` is committed because it is generated for `file://`.
 

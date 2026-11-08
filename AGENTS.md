@@ -70,7 +70,8 @@ then uploads that. It must never upload the repository root — `.git` would go 
 
 ## Continuity
 
-Local only. Canonical path: `~/Projects/i-have-adhd-demo`. Not published as of 2026-11-08. To publish, hand
-`PUBLISHING.md` to the session that has GitHub access: it covers repo creation, the Pages source switch, and the
-commit-identity check that must happen before the first push. After publishing, add the Pages URL to `README.md` and
-to this section in the same push.
+Published 2026-11-08: <https://github.com/somphol/i-have-adhd-demo>, demo at
+<https://somphol.github.io/i-have-adhd-demo/>. Local canonical path: `~/Projects/i-have-adhd-demo`.
+
+Pushes to `main` run the verify workflow and then deploy; the deploy takes about a minute. `PUBLISHING.md` keeps the
+one-time steps used to create the repo and switch Pages to GitHub Actions.
