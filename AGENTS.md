@@ -23,6 +23,9 @@ reports DOM errors:
   --virtual-time-budget=3000 --dump-dom "file://$PWD/index.html" | grep -c 'class="card"'
 ```
 
+CI runs `npm run verify` on every push and PR (`.github/workflows/verify.yml`), and deploys the static site on
+pushes to `main` (`.github/workflows/pages.yml`). One-time Pages setup lives in `PUBLISHING.md`.
+
 ## Architecture
 
 Three layers, deliberately separate:
@@ -36,6 +39,9 @@ Three layers, deliberately separate:
 3. `assets/app.js` — DOM wiring: cards, three view modes (`both`/`before`/`after`, persisted in `localStorage`),
    kind filter, keys `1`/`2`/`3`. No framework.
 
+Deployment is `.github/workflows/pages.yml`: it stages `index.html`, `assets/`, `data/`, and `docs/` into `_site/`,
+then uploads that. It must never upload the repository root — `.git` would go with it.
+
 ## Decisions and constraints
 
 - **Block arrays, not markdown strings.** Newlines inside JSON strings are unreadable and easy to break. Each array
@@ -48,17 +54,21 @@ Three layers, deliberately separate:
 - **Answers are illustrations.** `README.md` says so twice, on purpose. Do not add a "results" table implying these
   are model measurements.
 - **No dependencies, ever.** The page must open from a bare checkout on a machine with no toolchain.
+- **Publish only the site.** The Pages job copies files into `_site/` on purpose. Changing it to `path: .` would
+  publish the repository and its history.
 
 ## Known issues
 
 - Word counts are whitespace tokenisation after stripping markup. Good enough for comparison, not a metric.
 - `assets/app.js` uses `color-mix()` through CSS for the sticky bar; on very old browsers the bar is transparent but
   functional.
-- The only automated checks are data + string rendering. Layout was verified by hand with headless Chrome at 1400px
-  and 390px viewports; there is no CI browser test.
+- The only automated checks are data + string rendering (locally and in CI). Layout was verified by hand with
+  headless Chrome at 1400px and 390px viewports; there is no CI browser test.
 - `docs/preview.png` is a manual screenshot (`--window-size=1400,1760`); regenerate it if the layout changes.
 
 ## Continuity
 
-Local only. Canonical path: `~/Projects/i-have-adhd-demo`. Not published; if it is pushed, update this file with the
-remote and the Pages URL in the same push.
+Local only. Canonical path: `~/Projects/i-have-adhd-demo`. Not published as of 2026-11-08. To publish, hand
+`PUBLISHING.md` to the session that has GitHub access: it covers repo creation, the Pages source switch, and the
+commit-identity check that must happen before the first push. After publishing, add the Pages URL to `README.md` and
+to this section in the same push.

@@ -57,6 +57,11 @@ npm run verify           # build, then enforce the rules below
 
 That is the point of the repo: the "after" column cannot quietly become the "before" column.
 
+## Deploy
+
+Pushing to `main` publishes the static files to GitHub Pages via `.github/workflows/pages.yml`. The one-time setup
+for a fresh repo (create it, then point Pages at GitHub Actions) is in `PUBLISHING.md`.
+
 ## Layout
 
 ```text
@@ -67,6 +72,8 @@ data/examples.json    the source of truth: prompts, both answers, rationale, rul
 data/examples.js      generated for file:// use
 scripts/build.mjs     JSON → JS
 scripts/verify.mjs    the gate described above
+.github/workflows/    verify on push/PR, deploy to Pages on main
+PUBLISHING.md         the one-time steps another session needs to publish
 ```
 
 ## Adding an example
