@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same prompt. Two answers. — i-have-adhd demo</title>
+<meta name="description" content="Side-by-side examples of the i-have-adhd output skill: nine coding requests answered with and without the 10 rules.">
+<style>
+  :root {
+    --paper: #faf8f4;
+    --ink: #1b1813;
+    --muted: #6f675b;
+    --line: #ddd6c8;
+    --line-soft: #eae4d8;
+    --good: #0b6b3a;
+    --good-soft: #eef6f0;
+    --bad: #9a2f2a;
+    --bad-soft: #fbf0ee;
+    --code: #f1ece2;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.6 ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: min(1180px, 92vw); margin: 0 auto; }
+  a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: currentColor; }
+
+  /* header */
+  .top { padding: 64px 0 36px; border-bottom: 1px solid var(--line); }
+  .eyebrow {
+    margin: 0 0 14px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1 {
+    margin: 0 0 16px;
+    font: 400 clamp(34px, 5.2vw, 60px)/1.04 ui-serif, Georgia, "Times New Roman", serif;
+    letter-spacing: -.02em;
+  }
+  .lede { max-width: 62ch; margin: 0; font-size: 17px; color: #3f3a31; }
+  .lede a { color: var(--good); }
+  .stats {
+    display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 0; padding: 0; list-style: none;
+  }
+  .metric {
+    min-width: 118px; padding: 12px 16px; border: 1px solid var(--line);
+    border-radius: 10px; background: #fff;
+  }
+  .metric dt {
+    margin: 0; font: 600 22px/1.1 ui-serif, Georgia, serif; letter-spacing: -.01em;
+  }
+  .metric dd {
+    margin: 4px 0 0; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* controls */
+  .controls {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    padding: 12px 0; background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--line-soft);
+  }
+  .group { display: flex; flex-wrap: wrap; max-width: 100%; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  .group button {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    padding: 6px 13px; border-radius: 999px; color: var(--muted);
+    font: inherit; font-size: 13px;
+  }  .group button:hover { color: var(--ink); }
+  .group button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  #filters button span { opacity: .55; font-size: 11px; }
+  .hint { font-size: 12px; color: var(--muted); }
+  kbd {
+    font: 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    padding: 2px 5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; background: #fff;
+  }
+
+  /* cards */
+  main { padding: 34px 0 10px; }
+  .card {
+    margin: 0 0 34px; padding: 22px; border: 1px solid var(--line);
+    border-radius: var(--radius); background: #fff;
+  }
+  .card:target { border-color: var(--ink); }
+  .card-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .index {
+    font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted);
+  }
+  .card-head h2 {
+    flex: 1 1 auto; margin: 0; font: 500 21px/1.25 ui-serif, Georgia, serif; letter-spacing: -.01em;
+  }
+  .kind {
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px;
+  }
+  .prompt {
+    display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: start;
+    margin: 18px 0 18px; padding: 14px 16px; background: #fcfaf6;
+    border: 1px solid var(--line-soft); border-radius: 9px;
+  }
+  .tag { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .pane { min-width: 0; border: 1px solid var(--line-soft); border-radius: 10px; overflow: hidden; }
+  .pane-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase;
+    border-bottom: 1px solid var(--line-soft); background: #fbf9f5;
+  }
+  .pane-head .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+  .pane-head .words { margin-left: auto; letter-spacing: 0; text-transform: none; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .pane.before .pane-head { background: var(--bad-soft); color: #7c2a25; }
+  .pane.before .dot { background: var(--bad); }
+  .pane.after .pane-head { background: var(--good-soft); color: #0a5730; }
+  .pane.after .dot { background: var(--good); }
+  .pane .prose { padding: 14px 16px; }
+
+  .prose { min-width: 0; }
+  .prose p { margin: 0 0 11px; }
+  .prose > :last-child { margin-bottom: 0; }
+  .prose ol, .prose ul { margin: 0 0 11px; padding-left: 22px; }
+  .prose li { margin: 3px 0; }
+  .prose code {
+    font: .89em/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--code); padding: 2px 5px; border-radius: 4px;
+    overflow-wrap: anywhere;
+  }
+  .prose pre {
+    margin: 0 0 11px; padding: 12px 14px; overflow-x: auto; max-width: 100%;
+    background: #23201a; color: #f3efe6; border-radius: 8px;
+  }
+  .prose pre code { background: none; padding: 0; font-size: 13px; color: inherit; }
+
+  /* dim the losing side */
+  body[data-view="before"] .pane.after,
+  body[data-view="after"] .pane.before { display: none; }
+  body[data-view="before"] .pair,
+  body[data-view="after"] .pair { grid-template-columns: 1fr; }
+
+  .why { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .why h3 {
+    margin: 0 0 8px; font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .why ul { margin: 0; padding-left: 18px; }
+  .why li { margin: 4px 0; font-size: 14.5px; color: #3a352c; }
+  .rules { margin: 10px 0 0; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .rules span {
+    display: inline-block; min-width: 20px; margin-left: 4px; text-align: center;
+    border: 1px solid var(--line); border-radius: 4px; font-size: 10px; padding: 1px 0;
+    letter-spacing: 0; font-variant-numeric: tabular-nums;
+  }
+  #empty { padding: 40px 0; color: var(--muted); }
+
+  /* footer */
+  .rubric { padding: 44px 0; border-top: 1px solid var(--line); margin-top: 20px; }
+  .rubric h2 { margin: 0 0 6px; font: 500 24px/1.2 ui-serif, Georgia, serif; }
+  .rubric p { margin: 0 0 18px; color: var(--muted); max-width: 60ch; }
+  .rubric ol { columns: 2; column-gap: 40px; margin: 0; padding-left: 20px; }
+  .rubric li { margin: 7px 0; break-inside: avoid; }
+  footer { padding: 26px 0 60px; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 13px; }
+  footer p { margin: 0 0 6px; }
+
+  @media (max-width: 860px) {
+    .top { padding: 44px 0 26px; }
+    .pair { grid-template-columns: 1fr; }
+    .rubric ol { columns: 1; }
+    .controls { position: static; }
+    .hint { display: none; }
+  }
+  @media print {
+    .controls, .hint { display: none; }
+    .card { break-inside: avoid; border-color: #bbb; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body data-view="both">
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">i-have-adhd · a side-by-side demo</p>
+    <h1>Same prompt.<br>Two answers.</h1>
+    <p class="lede">
+      Nine everyday coding requests, answered once the way a generic assistant usually does,
+      and once under the 10 rules of the
+      <a href="https://github.com/ayghri/i-have-adhd">i-have-adhd</a> output skill.
+      Press <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> to switch views.
+    </p>
+    <dl class="stats" id="stats"></dl>
+  </div>
+</header>
+
+<nav class="controls wrap" aria-label="View controls">
+  <div class="group" role="group" aria-label="Show">
+    <button type="button" data-view="both" aria-pressed="true">Both</button>
+    <button type="button" data-view="before" aria-pressed="false">Without</button>
+    <button type="button" data-view="after" aria-pressed="false">With skill</button>
+  </div>
+  <div class="group" id="filters" role="group" aria-label="Filter by kind"></div>
+  <span class="hint">Words counted on rendered text, not markup.</span>
+</nav>
+
+<main class="wrap" id="examples"></main>
+<p class="wrap" id="empty" hidden>No examples in this category.</p>
+
+<section class="rubric wrap">
+  <h2>The 10 rules being demonstrated</h2>
+  <p>From <a href="https://github.com/ayghri/i-have-adhd/blob/main/skills/i-have-adhd/SKILL.md">SKILL.md</a>, MIT licensed. Abridged here; the file is the source of truth.</p>
+  <ol>
+    <li>Lead with the next action.</li>
+    <li>Number multi-step tasks, one bounded action each.</li>
+    <li>End with one concrete next step.</li>
+    <li>Suppress tangents.</li>
+    <li>Restate state every turn.</li>
+    <li>Specific time estimates, never "a bit".</li>
+    <li>Make wins visible.</li>
+    <li>Matter-of-fact errors: location, cause, fix.</li>
+    <li>Cap lists to 5 items.</li>
+    <li>No preamble, no recap, no closers.</li>
+  </ol>
+</section>
+
+<footer class="wrap">
+  <p>Hand-written illustrations, not recorded transcripts. The comparison is about shape and length; a real model's wording will differ.</p>
+  <p>Skill by <a href="https://github.com/ayghri">ayghri</a> · MIT. This demo is unaffiliated and links upstream as the source of truth.</p>
+</footer>
+
+<script src="assets/render.js"></script>
+<script src="data/examples.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
