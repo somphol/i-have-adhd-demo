@@ -20,6 +20,13 @@ gh api "repos/{owner}/i-have-adhd-demo/pages" --jq .html_url
 
 If the `POST` returns `409`, Pages already exists; use `PUT` instead of `POST`.
 
+If the push happened before Pages was enabled, that first deploy run fails at `configure-pages` with
+`Get Pages site failed`. Enable Pages, then re-run the failed jobs — no code change is needed:
+
+```sh
+gh run rerun --failed --workflow pages
+```
+
 Then confirm the workflow finished and the URL serves the page:
 
 ```sh
